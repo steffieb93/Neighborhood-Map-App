@@ -1,71 +1,108 @@
-import React, { Component } from 'react';
+/*
+    This is the Map Component File.
+    This file contains the content that will help with showing the map, markers, and infowindows.
+*/
 
+// Imports
+import React, { Component } from 'react'
+
+// Class
 class Map extends Component {
+    /* Variable where all the venue information will be when it is set in the state */
     state = {
-        venues: []
+        venues: [],
+        venueDetails: [],
     }
 
+    /* Functions to fetch all the venue data from the Foursquare API to put in the state */
     componentDidMount() {
-        this.getVenues()
+        this.fetchVenues()
     }
-
-    renderMap = () => {
-        loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyASsGNYTK3UoNt4bCAbmRvDmZI8KEwzLfM&callback=initMap")
-
-        window.initMap = this.initMap
-    }
-
-    getVenues = () => {
+    fetchVenues = () => {
+        // These are the parameters needed to make a request in JavaScript for the Foursquare API
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
             limit: 10,
             ll: "32.729917,-97.114516",
             query: "food"
-
         }
 
-        // 'https://api.foursquare.com/v2/venues/explore?client_id=BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO&client_secret=FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG&v=20180323&limit=5&ll=32.729917,-97.114516&query=food'
-
         fetch('https://api.foursquare.com/v2/venues/explore?client_id=' + parameters.client_id + '&client_secret=' + parameters.client_secret + '&v=20180323&limit=' + parameters.limit + '&ll=' + parameters.ll + '&query=' + parameters.query)
-        .then((resp) => resp.json())
+        // Parses only the JSON data
+        .then((response) => response.json())
+        // Setting the API response to the venue state
         .then((data) => {
-            // Code for handling API response
             this.setState({venues: data.response.groups[0].items}, this.renderMap())
         })
+        // If an error occurs
         .catch((error) => {
-            // Code for handling errors
             console.log(error)
-        });
+        })
     }
 
+
+    /* Functions to render and load the map to the screen */
+    renderMap = () => {
+        // Goes to loadScript function to make sure script is added for map to show
+        loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyASsGNYTK3UoNt4bCAbmRvDmZI8KEwzLfM&callback=initMap")
+
+        window.initMap = this.initMap
+    }
     initMap = () => {
+        // Creates the map with the center being UTA
         var map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 32.729917, lng: -97.114516},
             zoom: 15
         })
 
-        this.state.venues.map((myVenue) => {
-            var marker = new window.google.maps.Marker({
-                position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
-                map: map,
-                animation: window.google.maps.Animation.DROP,
-                id: myVenue.venue.id,
-                title: myVenue.venue.name
-            })
+        // Creates an info Window (for multiple markers)
+        var infoWindow = new window.google.maps.InfoWindow({
+            maxWidth: 250
         })
 
+        // Creates Markers & InfoWindows for each marker for all locations in venues array
+        this.state.venues.map((venueLocation) => {
+            // Creates the Markers
+            var marker = new window.google.maps.Marker({
+                map: map,
+                position: {lat: venueLocation.venue.location.lat, lng: venueLocation.venue.location.lng},
+                title: venueLocation.venue.name,
+                animation: window.google.maps.Animation.DROP,
+                id: venueLocation.venue.id
+            })
 
+            // Creates InfoWindow content
+            var infoContent = `<div id="content-container">
+                                  <h3>${venueLocation.venue.name}</h3>
+                                  <div id="venue-address">
+                                     <p>${venueLocation.venue.location.formattedAddress[0]}</p>
+                                     <p>${venueLocation.venue.location.formattedAddress[1]}</p>
+                                  </div>
+                                  <div id="test"></div>
+                               </div>`
+
+            // When marker is clicked
+            marker.addListener('click', function() {
+                // Sets the correct infoWindow content
+                infoWindow.setContent(infoContent)
+
+                // Opens Info Window
+                infoWindow.open(map, marker)
+            })
+        })
     }
 
     render() {
-        console.log(this.state.venues)
+        console.log('Venue', this.state.venues)
+        //console.log('Venue Details', this.state.venueDetails)
         return (
           <div id="map"></div>
         )
     }
 }
 
+// Function to load a script tag to the index.html file for Google Maps to show on screen
 function loadScript(url) {
     var index = window.document.getElementsByTagName("script")[0]
     var script = window.document.createElement("script")
@@ -78,3 +115,11 @@ function loadScript(url) {
 }
 
 export default Map
+
+
+
+/*
+    Yelp API
+    Client ID: TqMGVxAtgK8dyCtT6Hda3w
+    API Key: NC9szriNh6p3q8CG4WjUWZPnT7-eq-L6cTYH0u-yZlJWm0UrHq3wF_ysWBwggIj5O2VHivnjVwCRkSeeEbjIUHMD25xkV2JI5ZlcyGGfmAyITx7Q44COVi3bwTqRXHYx
+*/
