@@ -53,7 +53,6 @@ html, body {
     background-color: #000;
     color: #fff;
     height: 100vh;
-    top: 7.5%;
     margin: 0;
     text-align: center;
 }
@@ -68,7 +67,8 @@ html, body {
 }
 
 .listingsButton {
-    margin: 10px;
+    height: 40px;
+    margin: 15px;
     border-radius: 5px;
     padding: 5px;
 

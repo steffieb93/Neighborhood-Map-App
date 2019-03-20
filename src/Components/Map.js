@@ -13,7 +13,8 @@ class Map extends Component {
     /* Variable where all the venue information will be when it is set in the state */
     state = {
         venues: [],
-        venueDetails: [],
+        venueURL: [],
+        venueDetails: []
     }
 
     /* Functions to fetch all the venue data from the Foursquare API to put in the state */
@@ -42,6 +43,40 @@ class Map extends Component {
             console.log(error)
         })
     }
+    fetchVenueDetails = (venueID) => {
+        //console.log(venueID)
+        const parameter = {
+            client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
+            client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG"
+        }
+
+        fetch('https://api.foursquare.com/v2/venues/' + venueID + '?client_id=' + parameter.client_id + '&client_secret=' + parameter.client_secret + '&v=20180323')
+        .then((response) => response.json())
+        .then((data) => {
+            //this.setState({venueDetails: data.response})
+            this.setState({venueURL: data.response})
+            this.addTovenueDetails()
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    addTovenueDetails = () => {
+        this.setState((state) => {
+            //console.log('state is: ', state)
+            //console.log(state.venueURL)
+            state.venueDetails.push(state.venueURL)
+
+        })
+    }
+    /*testingFunc = (venue) => {
+        var a = this.fetchVenueDetails(venue)
+        console.log('a is:', a)
+        return "Juice"
+    }
+    test = (url) => {
+        console.log(url)
+    }*/
 
     /* Functions to render and load the map to the screen */
     renderMap = () => {
@@ -64,6 +99,7 @@ class Map extends Component {
 
         // Creates Markers & InfoWindows for each marker for all locations in venues array
         this.state.venues.map((venueLocation) => {
+            this.fetchVenueDetails(venueLocation.venue.id)
             var marker = new window.google.maps.Marker({
                 map: map,
                 position: {lat: venueLocation.venue.location.lat, lng: venueLocation.venue.location.lng},
@@ -79,22 +115,45 @@ class Map extends Component {
                                      <p>${venueLocation.venue.location.formattedAddress[0]}</p>
                                      <p>${venueLocation.venue.location.formattedAddress[1]}</p>
                                   </div>
-                                  <div id="test">test</div>
                                </div>`
 
             // When marker is clicked
             marker.addListener('click', function() {
                 // Sets the Info Content to the infoWindow
                 infoWindow.setContent(infoContent)
+                var change = test(this.id)
+                infoWindow.setContent(infoContent + change)
 
                 // Opens Info Window
                 infoWindow.open(map, marker)
             })
         })
+
+        var test = (id) => {
+            let moreDetails
+            this.state.venueDetails.map((detail) => {
+                if(detail.venue.id === id){
+                    //console.log(detail.venue.name)
+                    moreDetails = `<div>
+                                      <img src="${detail.venue.bestPhoto.prefix}200x200${detail.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                      <a href='${detail.venue.url}' target='_blank'>visit site here</a>
+                                   </div>`
+                    //var a = name.toString()
+                    //console.log(a)
+                }
+            })
+            //this.state.venu
+            //var c = this.testingFunc(id)
+            //console.log(c)
+            return moreDetails
+        }
     }
 
+
+
     render() {
-        console.log('Venue', this.state.venues)
+        //console.log('Venue', this.state.venues)
+        //console.log('Venue Details', this.state.venueDetails)
         return (
             <div className="container">
                 <div id="map"></div>
