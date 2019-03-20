@@ -28,6 +28,21 @@ html, body {
     /* height: 50px; */
 }
 
+.menu {
+    width: 60px;
+    height: 60px;
+    float: left;
+}
+.icon {
+    color: #fff;
+    font-size: 30px;
+    background-color: #000;
+    border: none;
+}
+.icon i {
+    margin: 20px;
+}
+
 .navBar h1 {
     margin: 0 15px;
     padding: 20px 0;
@@ -46,6 +61,10 @@ html, body {
 .sideBar h2 {
     margin: 0;
     padding: 0 15px;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 .listingsButton {

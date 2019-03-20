@@ -51,8 +51,6 @@ class Map extends Component {
         window.initMap = this.initMap
     }
     initMap = () => {
-        //console.log(this)
-        let url
         // Creates the map with the center being UTA
         var map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 32.729917, lng: -97.114516},
@@ -86,6 +84,7 @@ class Map extends Component {
 
             // When marker is clicked
             marker.addListener('click', function() {
+                // Sets the Info Content to the infoWindow
                 infoWindow.setContent(infoContent)
 
                 // Opens Info Window
