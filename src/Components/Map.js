@@ -5,6 +5,8 @@
 
 // Imports
 import React, { Component } from 'react'
+import NavBar from './NavBar'
+import SideBar from './SideBar'
 
 // Class
 class Map extends Component {
@@ -41,7 +43,6 @@ class Map extends Component {
         })
     }
 
-
     /* Functions to render and load the map to the screen */
     renderMap = () => {
         // Goes to loadScript function to make sure script is added for map to show
@@ -50,6 +51,8 @@ class Map extends Component {
         window.initMap = this.initMap
     }
     initMap = () => {
+        //console.log(this)
+        let url
         // Creates the map with the center being UTA
         var map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 32.729917, lng: -97.114516},
@@ -63,7 +66,6 @@ class Map extends Component {
 
         // Creates Markers & InfoWindows for each marker for all locations in venues array
         this.state.venues.map((venueLocation) => {
-            // Creates the Markers
             var marker = new window.google.maps.Marker({
                 map: map,
                 position: {lat: venueLocation.venue.location.lat, lng: venueLocation.venue.location.lng},
@@ -79,12 +81,11 @@ class Map extends Component {
                                      <p>${venueLocation.venue.location.formattedAddress[0]}</p>
                                      <p>${venueLocation.venue.location.formattedAddress[1]}</p>
                                   </div>
-                                  <div id="test"></div>
+                                  <div id="test">test</div>
                                </div>`
 
             // When marker is clicked
             marker.addListener('click', function() {
-                // Sets the correct infoWindow content
                 infoWindow.setContent(infoContent)
 
                 // Opens Info Window
@@ -95,9 +96,12 @@ class Map extends Component {
 
     render() {
         console.log('Venue', this.state.venues)
-        //console.log('Venue Details', this.state.venueDetails)
         return (
-          <div id="map"></div>
+            <div className="container">
+                <div id="map"></div>
+                <NavBar venues={this.state.venues} />
+                <SideBar venues={this.state.venues} />
+            </div>
         )
     }
 }
@@ -115,11 +119,3 @@ function loadScript(url) {
 }
 
 export default Map
-
-
-
-/*
-    Yelp API
-    Client ID: TqMGVxAtgK8dyCtT6Hda3w
-    API Key: NC9szriNh6p3q8CG4WjUWZPnT7-eq-L6cTYH0u-yZlJWm0UrHq3wF_ysWBwggIj5O2VHivnjVwCRkSeeEbjIUHMD25xkV2JI5ZlcyGGfmAyITx7Q44COVi3bwTqRXHYx
-*/

@@ -6,6 +6,8 @@
 // Imports
 import React, { Component } from 'react'
 import Map from './Components/Map'
+import NavBar from './Components/NavBar'
+import SideBar from './Components/SideBar'
 import './App.css'
 
 // Class

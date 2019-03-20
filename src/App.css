@@ -1,17 +1,56 @@
-#map {
-    height: 100vh;
-}
-
-/* html, body {
+html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-} */
+}
 
-/*#content-container {
-    color: red;
-}*/
+#map {
+    height: 92.5vh;
+    bottom: 0px;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+}
 
 #venue-address p {
     margin: 0;
+}
+#venue-address p:last-child {
+    margin-bottom: 5px;
+}
+
+.navBar {
+    background-color: #000;
+    color: #fff;
+    position: relative;
+    text-align: center;
+    /* width: 100vh; */
+    /* height: 50px; */
+}
+
+.navBar h1 {
+    margin: 0 15px;
+    padding: 20px 0;
+}
+
+.sideBar {
+    position: fixed;
+    background-color: #000;
+    color: #fff;
+    height: 100vh;
+    top: 7.5%;
+    margin: 0;
+    text-align: center;
+}
+
+.sideBar h2 {
+    margin: 0;
+    padding: 0 15px;
+}
+
+.listingsButton {
+    margin: 10px;
+    border-radius: 5px;
+    padding: 5px;
+
 }
