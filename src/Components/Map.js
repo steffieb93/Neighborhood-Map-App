@@ -28,7 +28,7 @@ class Map extends Component {
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
-            limit: 10,
+            limit: 30,
             ll: "32.729917,-97.114516",
             query: "food"
         }
