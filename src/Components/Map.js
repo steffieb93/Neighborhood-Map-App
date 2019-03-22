@@ -14,7 +14,9 @@ class Map extends Component {
     state = {
         venues: [],
         venueURL: [],
-        venueDetails: []
+        venueDetails: [],
+        query: '',
+        markers: []
     }
 
     /* Functions to fetch all the venue data from the Foursquare API to put in the state */
@@ -26,7 +28,7 @@ class Map extends Component {
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
-            limit: 30,
+            limit: 10,
             ll: "32.729917,-97.114516",
             query: "food"
         }
@@ -63,11 +65,13 @@ class Map extends Component {
     }
     addTovenueDetails = () => {
         this.setState((state) => {
-            //console.log('state is: ', state)
-            //console.log(state.venueURL)
             state.venueDetails.push(state.venueURL)
 
         })
+    }
+
+    updateQuery = (query) => {
+        this.setState({query: query})
     }
 
     /* Functions to render and load the map to the screen */
@@ -98,6 +102,10 @@ class Map extends Component {
                 title: venueLocation.venue.name,
                 animation: window.google.maps.Animation.DROP,
                 id: venueLocation.venue.id
+            })
+
+            this.setState((state) => {
+                state.markers.push(marker)
             })
 
             // Creates InfoWindow content
@@ -148,13 +156,17 @@ class Map extends Component {
 
 
     render() {
-        //console.log('Venue', this.state.venues)
+        //console.log('marker', this.state.markers)
         //console.log('Venue Details', this.state.venueDetails)
         return (
             <div className="container">
                 <div id="map"></div>
                 <NavBar venues={this.state.venues} />
-                <SideBar venues={this.state.venues} />
+                <SideBar
+                    venues={this.state.venues}
+                    query={this.state.query}
+                    updateQuery={this.updateQuery}
+                    markers={this.state.markers} />
             </div>
         )
     }
