@@ -26,7 +26,7 @@ class Map extends Component {
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
-            limit: 10,
+            limit: 30,
             ll: "32.729917,-97.114516",
             query: "food"
         }
@@ -69,14 +69,6 @@ class Map extends Component {
 
         })
     }
-    /*testingFunc = (venue) => {
-        var a = this.fetchVenueDetails(venue)
-        console.log('a is:', a)
-        return "Juice"
-    }
-    test = (url) => {
-        console.log(url)
-    }*/
 
     /* Functions to render and load the map to the screen */
     renderMap = () => {
@@ -121,8 +113,8 @@ class Map extends Component {
             marker.addListener('click', function() {
                 // Sets the Info Content to the infoWindow
                 infoWindow.setContent(infoContent)
-                var change = test(this.id)
-                infoWindow.setContent(infoContent + change)
+                var extraDetails = test(this.id)
+                infoWindow.setContent(infoContent + extraDetails)
 
                 // Opens Info Window
                 infoWindow.open(map, marker)
@@ -134,17 +126,21 @@ class Map extends Component {
             this.state.venueDetails.map((detail) => {
                 if(detail.venue.id === id){
                     //console.log(detail.venue.name)
-                    moreDetails = `<div>
-                                      <img src="${detail.venue.bestPhoto.prefix}200x200${detail.venue.bestPhoto.suffix}" alt="Restaurant Picture">
-                                      <a href='${detail.venue.url}' target='_blank'>visit site here</a>
-                                   </div>`
-                    //var a = name.toString()
-                    //console.log(a)
+                    if (detail.venue.url === undefined) {
+                        moreDetails = `<div>
+                                          <img src="${detail.venue.bestPhoto.prefix}200x200${detail.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                          <p><strong>NO URL FOR RESTAURANT</strong></P>
+                                       </div>`
+                    } else {
+                        moreDetails = `<div>
+                                          <img src="${detail.venue.bestPhoto.prefix}200x200${detail.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                          <p><a href='${detail.venue.url}' target='_blank'>visit site here</a></p>
+                                       </div>`
+                    }
+
                 }
             })
             //this.state.venu
-            //var c = this.testingFunc(id)
-            //console.log(c)
             return moreDetails
         }
     }
