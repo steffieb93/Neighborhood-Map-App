@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import escapeRegExp from 'escape-string-regexp'
 
 class SideBar extends Component {
-    /*state = {
-        query: '',
-    }*/
+    state = {
+        test: [{name: 'Chick-fil-A'}, {name: 'Tin Cup'}, {name: 'Chicken Express'}, {name: 'Taco  Casa'}, {name: 'New York Eats'}]
+    }
 
     render() {
         console.log(this.props.markers)
@@ -13,20 +13,24 @@ class SideBar extends Component {
             const match = new RegExp(escapeRegExp(this.props.query), 'i')
             showingPlaces = this.props.venues.filter((place) => match.test(place.venue.name))
 
+
             this.props.markers.map((empty) => {
-                if (empty.title === "Chick-fil-A") {
-                    empty.setVisible(true)
-                } else {
-                    empty.setVisible(false)
-                }
+                empty.setVisible(false)
+                //console.log('Title is:', empty.title)
+                this.state.test.map((placeTest) => {
+                    //console.log('Test name is:', placeTest)
+                    if (empty.title === placeTest.name) {
+                        empty.setVisible(true)
+                    }
+                })
+                //console.log(this.state.test)
             })
 
             /*this.props.markers.map((empty) => {
+                empty.setVisible(false)
                 showingPlaces.map((mark) => {
-                    if (showingPlaces.venue.id === empty.id) {
+                    if (empty.id === mark.venue.id) {
                         empty.setVisible(true)
-                    } else {
-                        empty.setVisible(false)
                     }
                 })
             })*/
