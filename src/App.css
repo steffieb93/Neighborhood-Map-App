@@ -28,6 +28,9 @@ html, body {
     margin: 0 15px;
     padding: 20px 0;
 }
+.navBar h1 a {
+    text-decoration: none;
+}
 
 .menu {
     width: 60px;
@@ -86,4 +89,22 @@ html, body {
 .places-grid li:hover {
     background-color: purple;
     cursor: pointer;
+}
+.places-grid li:active, .places-grid li:focus {
+    border: 1px solid white;
+}
+
+@media screen and (max-width: 400px) {
+    .sideBar {
+        width: 100vw;
+    }
+}
+
+@media screen and (min-height: 1100px) {
+    #map {
+        height: 94.5vh;
+    }
+    .sideBar {
+        top: 70px;
+    }
 }

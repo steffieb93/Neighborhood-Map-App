@@ -6,6 +6,16 @@ For this project, a single page application will be developed featuring a map of
 ### Projcet Rubric
 The project will be evaluated according to the [Neighborhood Map (React) Projcet Rubric]
 
+### Installation Instructions
+* install all project dependencies with `npm install`
+* install (if needed) escapeRegExp to all project dependencies with `npm install --save escape-string-regexp`
+* start the development server with `npm start`
+
+### API Used
+* Google Maps API
+* Foursquare API
+    * Two types of request used for this API. Their premium request has a limit of 500 calls per day and the premium request was used to get a picture and url of place
+
 ### Development Strategy
 Steps on how to start this project
 1. Obtain a Google Maps API Key

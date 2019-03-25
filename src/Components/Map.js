@@ -29,7 +29,7 @@ class Map extends Component {
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
-            limit: 10,
+            limit: 20,
             ll: "32.729917,-97.114516",
             query: "food"
         }
@@ -170,8 +170,8 @@ class Map extends Component {
 
     render() {
         return (
-            <div className="container">
-                <div id="map"></div>
+            <div className="container" aria-hidden="true" tabIndex="-1">
+                <div id="map" role="application" aria-hidden="true" tabIndex="-1"></div>
                 {/* Connects the NavBar and SideBar Components with the Map Component */}
                 <NavBar venues={this.state.venues} />
                 <SideBar

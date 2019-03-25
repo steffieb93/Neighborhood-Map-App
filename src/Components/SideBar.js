@@ -64,6 +64,65 @@ class SideBar extends Component {
         this.props.infoBox.open(this.map, setMarker)
     }
 
+
+    /* Function to connect the name on list to open the correct infoWindow for the correct marker when Enter is pressed on keyboard */
+    enterPressed = (venues, event) => {
+        var code = event.keyCode || event.which
+        if (code === 13) {
+            var setMarker
+            var info, moreInfo
+
+            // Creation of InfoWindow content
+            this.props.venues.map((placeName) => {
+                if (placeName.venue.id === venues.venue.id) {
+                    info = `<div id="content-container">
+                              <h3>${placeName.venue.name}</h3>
+                              <div id="venue-address">
+                                 <p>${placeName.venue.location.formattedAddress[0]}</p>
+                                 <p>${placeName.venue.location.formattedAddress[1]}</p>
+                              </div>
+                           </div>`
+                }
+            })
+
+            // Creation of the extra info Content
+            this.props.venueDetails.map((details) => {
+                if (details.venue.id === venues.venue.id) {
+                    if (details.venue.url === undefined) {
+                        moreInfo = `<div>
+                                      <img src="${details.venue.bestPhoto.prefix}200x200${details.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                      <p><strong>NO URL FOR RESTAURANT</strong></P>
+                                   </div>`
+                    } else {
+                        moreInfo = `<div>
+                                      <img src="${details.venue.bestPhoto.prefix}200x200${details.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                      <p><a href='${details.venue.url}' target='_blank'>visit site here</a></p>
+                                   </div>`
+                    }
+                }
+            })
+
+            // Setting the location for infoWindow to pop up to the correct marker
+            this.props.markers.map((marker) => {
+                if (marker.id === venues.venue.id) {
+                    setMarker = marker
+                }
+            })
+
+            // Setting animation for marker
+            if (setMarker.getAnimation() === null) {
+                setMarker.setAnimation(window.google.maps.Animation.BOUNCE)
+                setTimeout(() => {setMarker.setAnimation(null)}, 1000)
+            } else {
+                setMarker.setAnimation(null)
+            }
+
+            // Setting and opening content in infoWindow
+            this.props.infoBox.setContent(info + moreInfo)
+            this.props.infoBox.open(this.map, setMarker)
+        }
+    }
+
     render() {
         console.log(this.props.markers)
         let showingPlaces
@@ -93,6 +152,7 @@ class SideBar extends Component {
                     <h2>Map of UT Arlington</h2>
                     <div className="search-places-bar">
                         <input
+                            tabIndex="0"
                             type="text"
                             placeholder="Search for Place Here"
                             onChange={(event) => this.props.updateQuery(event.target.value)}
@@ -104,7 +164,11 @@ class SideBar extends Component {
                             {
                                 showingPlaces.map((place) => {
                                     return (
-                                        <li key={place.venue.id} onClick={this.listClick.bind(this, place)}>
+                                        <li
+                                            tabIndex="0"
+                                            key={place.venue.id}
+                                            onClick={this.listClick.bind(this, place)}
+                                            onKeyPress={this.listClick.bind(this, place)}>
                                             {place.venue.name}
                                         </li>
                                     )

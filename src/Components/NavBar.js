@@ -20,7 +20,11 @@ class NavBar extends Component {
             <div className="navContainer">
                 <nav className="navBar">
                     <div className="menu">
-                        <button className="icon" onClick={this.sideMenu}>
+                        <button
+                            tabIndex="0"
+                            aria-label="Menu Icon"
+                            className="icon"
+                            onClick={this.sideMenu}>
                             <i className="fa fa-bars"></i>
                         </button>
                     </div>
