@@ -2,8 +2,61 @@ import React, { Component } from 'react'
 import escapeRegExp from 'escape-string-regexp'
 
 class SideBar extends Component {
-    state = {
-        test: [{name: 'Chick-fil-A'}, {name: 'Tin Cup'}, {name: 'Chicken Express'}, {name: 'Taco  Casa'}, {name: 'New York Eats'}]
+    listClick = (venues, e) => {
+        //console.log(venues)
+        var setMarker
+
+        /*var infoWindow = new window.google.maps.InfoWindow({
+            maxWidth: 250
+        })*/
+
+        //var info = "Testing"
+        var info, moreInfo, completeInfo
+
+        this.props.venues.map((placeName) => {
+            if (placeName.venue.id === venues.venue.id) {
+                info = `<div id="content-container">
+                          <h3>${placeName.venue.name}</h3>
+                          <div id="venue-address">
+                             <p>${placeName.venue.location.formattedAddress[0]}</p>
+                             <p>${placeName.venue.location.formattedAddress[1]}</p>
+                          </div>
+                       </div>`
+            }
+        })
+
+        this.props.venueDetails.map((details) => {
+            if (details.venue.id === venues.venue.id) {
+                if (details.venue.url === undefined) {
+                    moreInfo = `<div>
+                                  <img src="${details.venue.bestPhoto.prefix}200x200${details.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                  <p><strong>NO URL FOR RESTAURANT</strong></P>
+                               </div>`
+                } else {
+                    moreInfo = `<div>
+                                  <img src="${details.venue.bestPhoto.prefix}200x200${details.venue.bestPhoto.suffix}" alt="Restaurant Picture">
+                                  <p><a href='${details.venue.url}' target='_blank'>visit site here</a></p>
+                               </div>`
+                }
+            }
+        })
+
+        this.props.markers.map((marker) => {
+            if (marker.id === venues.venue.id) {
+                setMarker = marker
+            }
+        })
+
+        if (setMarker.getAnimation() === null) {
+            setMarker.setAnimation(window.google.maps.Animation.BOUNCE)
+            setTimeout(() => {setMarker.setAnimation(null)}, 1000)
+        } else {
+            setMarker.setAnimation(null)
+        }
+
+        this.props.infoBox.setContent(info + moreInfo)
+
+        this.props.infoBox.open(this.map, setMarker)
     }
 
     render() {
@@ -13,27 +66,14 @@ class SideBar extends Component {
             const match = new RegExp(escapeRegExp(this.props.query), 'i')
             showingPlaces = this.props.venues.filter((place) => match.test(place.venue.name))
 
-
             this.props.markers.map((empty) => {
-                empty.setVisible(false)
-                //console.log('Title is:', empty.title)
-                this.state.test.map((placeTest) => {
-                    //console.log('Test name is:', placeTest)
-                    if (empty.title === placeTest.name) {
-                        empty.setVisible(true)
-                    }
-                })
-                //console.log(this.state.test)
-            })
-
-            /*this.props.markers.map((empty) => {
                 empty.setVisible(false)
                 showingPlaces.map((mark) => {
                     if (empty.id === mark.venue.id) {
                         empty.setVisible(true)
                     }
                 })
-            })*/
+            })
         } else {
             showingPlaces = this.props.venues
             this.props.markers.map((empty) => {
@@ -57,7 +97,7 @@ class SideBar extends Component {
                             {
                                 showingPlaces.map((place) => {
                                     return (
-                                        <li key={place.venue.id}>
+                                        <li key={place.venue.id} onClick={this.listClick.bind(this, place)}>
                                             {place.venue.name}
                                         </li>
                                     )

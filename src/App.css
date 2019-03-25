@@ -86,3 +86,10 @@ html, body {
     padding: 10px;
     margin: 5px 20px;
 }
+.places-grid li {
+    color: white;
+}
+.places-grid li:hover {
+    background-color: purple;
+    cursor: pointer;
+}

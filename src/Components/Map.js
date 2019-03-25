@@ -16,19 +16,21 @@ class Map extends Component {
         venueURL: [],
         venueDetails: [],
         query: '',
-        markers: []
+        markers: [],
+        infoBox: {}
     }
 
     /* Functions to fetch all the venue data from the Foursquare API to put in the state */
     componentDidMount() {
         this.fetchVenues()
     }
+
     fetchVenues = () => {
         // These are the parameters needed to make a request in JavaScript for the Foursquare API
         const parameters = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG",
-            limit: 30,
+            limit: 10,
             ll: "32.729917,-97.114516",
             query: "food"
         }
@@ -88,10 +90,16 @@ class Map extends Component {
             zoom: 15
         })
 
+        window.mapObj = this.map
+
         // Creates an info Window (for multiple markers)
         var infoWindow = new window.google.maps.InfoWindow({
             maxWidth: 250
         })
+
+        this.setState({infoBox: infoWindow})
+
+        //window.infoObj = this.infoWindow
 
         // Creates Markers & InfoWindows for each marker for all locations in venues array
         this.state.venues.map((venueLocation) => {
@@ -116,9 +124,19 @@ class Map extends Component {
                                      <p>${venueLocation.venue.location.formattedAddress[1]}</p>
                                   </div>
                                </div>`
+            //window.infoContent = this.infoContent
+            /*this.setState((state) => {
+                state.content.push(infoContent)
+            })*/
 
             // When marker is clicked
             marker.addListener('click', function() {
+                if (marker.getAnimation() === null) {
+                    marker.setAnimation(window.google.maps.Animation.BOUNCE)
+                    setTimeout(() => {marker.setAnimation(null)}, 1000)
+                } else {
+                    marker.setAnimation(null)
+                }
                 // Sets the Info Content to the infoWindow
                 infoWindow.setContent(infoContent)
                 var extraDetails = test(this.id)
@@ -153,9 +171,8 @@ class Map extends Component {
         }
     }
 
-
-
     render() {
+        //console.log('This content', this)
         //console.log('marker', this.state.markers)
         //console.log('Venue Details', this.state.venueDetails)
         return (
@@ -164,9 +181,11 @@ class Map extends Component {
                 <NavBar venues={this.state.venues} />
                 <SideBar
                     venues={this.state.venues}
+                    venueDetails={this.state.venueDetails}
                     query={this.state.query}
                     updateQuery={this.updateQuery}
-                    markers={this.state.markers} />
+                    markers={this.state.markers}
+                    infoBox={this.state.infoBox} />
             </div>
         )
     }
