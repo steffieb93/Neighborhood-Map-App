@@ -3,7 +3,6 @@ html, body {
     margin: 0;
     padding: 0;
 }
-
 #map {
     height: 92.5vh;
     bottom: 0px;
@@ -24,8 +23,10 @@ html, body {
     color: #fff;
     position: relative;
     text-align: center;
-    /* width: 100vh; */
-    /* height: 50px; */
+}
+.navBar h1 {
+    margin: 0 15px;
+    padding: 20px 0;
 }
 
 .menu {
@@ -43,11 +44,6 @@ html, body {
     margin: 20px;
 }
 
-.navBar h1 {
-    margin: 0 15px;
-    padding: 20px 0;
-}
-
 .sideBar {
     position: fixed;
     background-color: #000;
@@ -58,12 +54,10 @@ html, body {
     text-align: center;
     overflow-y: scroll;
 }
-
 .sideBar h2 {
     margin: 0;
     padding: 0 15px;
 }
-
 .hidden {
     visibility: hidden;
 }

@@ -10,7 +10,7 @@ import SideBar from './SideBar'
 
 // Class
 class Map extends Component {
-    /* Variable where all the venue information will be when it is set in the state */
+    /* Variables where all the venue details, markers, and infoWindow, information will be when it is set in the state */
     state = {
         venues: [],
         venueURL: [],
@@ -20,11 +20,10 @@ class Map extends Component {
         infoBox: {}
     }
 
-    /* Functions to fetch all the venue data from the Foursquare API to put in the state */
+    /* Functions to fetch all the venue data from the Foursquare API to put in the venues state */
     componentDidMount() {
         this.fetchVenues()
     }
-
     fetchVenues = () => {
         // These are the parameters needed to make a request in JavaScript for the Foursquare API
         const parameters = {
@@ -48,7 +47,7 @@ class Map extends Component {
         })
     }
     fetchVenueDetails = (venueID) => {
-        //console.log(venueID)
+        // Parameters to fetch more details from the Foursquare API. Need to go through the Premium API requests to get an image and url for venues
         const parameter = {
             client_id: "BWQBYMTVPIMXE2000VPH3OOCCOKVASFXO0SBDA0UNU5FYTVO",
             client_secret: "FCWVCH3HYKFC1UEIYQU5IZFOPP2X2GBNRB2UXG5EJWNIHARG"
@@ -57,7 +56,7 @@ class Map extends Component {
         fetch('https://api.foursquare.com/v2/venues/' + venueID + '?client_id=' + parameter.client_id + '&client_secret=' + parameter.client_secret + '&v=20180323')
         .then((response) => response.json())
         .then((data) => {
-            //this.setState({venueDetails: data.response})
+            // Sets the individual venue data to the venueURL state
             this.setState({venueURL: data.response})
             this.addTovenueDetails()
         })
@@ -66,19 +65,21 @@ class Map extends Component {
         })
     }
     addTovenueDetails = () => {
+        // Pushes the individual venue infomation to the venueDetails state to have all of the extra venue details in one array
         this.setState((state) => {
             state.venueDetails.push(state.venueURL)
 
         })
     }
 
+    /* Function to update Query state when someone usues the search box */
     updateQuery = (query) => {
         this.setState({query: query})
     }
 
     /* Functions to render and load the map to the screen */
     renderMap = () => {
-        // Goes to loadScript function to make sure script is added for map to show
+        // Goes to loadScript function to make sure script is added to index HTML for map to show
         loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyASsGNYTK3UoNt4bCAbmRvDmZI8KEwzLfM&callback=initMap")
 
         window.initMap = this.initMap
@@ -89,21 +90,19 @@ class Map extends Component {
             center: {lat: 32.729917, lng: -97.114516},
             zoom: 15
         })
-
         window.mapObj = this.map
 
-        // Creates an info Window (for multiple markers)
+        // Creates an info Window (for multiple markers) and sets to infoBox state
         var infoWindow = new window.google.maps.InfoWindow({
             maxWidth: 250
         })
-
         this.setState({infoBox: infoWindow})
 
-        //window.infoObj = this.infoWindow
-
-        // Creates Markers & InfoWindows for each marker for all locations in venues array
+        // Creates Markers & InfoWindow Content for each marker for all locations in venues array
         this.state.venues.map((venueLocation) => {
             this.fetchVenueDetails(venueLocation.venue.id)
+
+            // Creation of Markers
             var marker = new window.google.maps.Marker({
                 map: map,
                 position: {lat: venueLocation.venue.location.lat, lng: venueLocation.venue.location.lng},
@@ -111,12 +110,11 @@ class Map extends Component {
                 animation: window.google.maps.Animation.DROP,
                 id: venueLocation.venue.id
             })
-
             this.setState((state) => {
                 state.markers.push(marker)
             })
 
-            // Creates InfoWindow content
+            // Creation of InfoWindow content
             var infoContent = `<div id="content-container">
                                   <h3>${venueLocation.venue.name}</h3>
                                   <div id="venue-address">
@@ -124,19 +122,17 @@ class Map extends Component {
                                      <p>${venueLocation.venue.location.formattedAddress[1]}</p>
                                   </div>
                                </div>`
-            //window.infoContent = this.infoContent
-            /*this.setState((state) => {
-                state.content.push(infoContent)
-            })*/
 
             // When marker is clicked
             marker.addListener('click', function() {
+                // Gives marker an animation
                 if (marker.getAnimation() === null) {
                     marker.setAnimation(window.google.maps.Animation.BOUNCE)
                     setTimeout(() => {marker.setAnimation(null)}, 1000)
                 } else {
                     marker.setAnimation(null)
                 }
+
                 // Sets the Info Content to the infoWindow
                 infoWindow.setContent(infoContent)
                 var extraDetails = test(this.id)
@@ -147,11 +143,12 @@ class Map extends Component {
             })
         })
 
+        // Function to create and return the extra details for the infoWindow
         var test = (id) => {
             let moreDetails
+
             this.state.venueDetails.map((detail) => {
                 if(detail.venue.id === id){
-                    //console.log(detail.venue.name)
                     if (detail.venue.url === undefined) {
                         moreDetails = `<div>
                                           <img src="${detail.venue.bestPhoto.prefix}200x200${detail.venue.bestPhoto.suffix}" alt="Restaurant Picture">
@@ -166,18 +163,16 @@ class Map extends Component {
 
                 }
             })
-            //this.state.venu
+
             return moreDetails
         }
     }
 
     render() {
-        //console.log('This content', this)
-        //console.log('marker', this.state.markers)
-        //console.log('Venue Details', this.state.venueDetails)
         return (
             <div className="container">
                 <div id="map"></div>
+                {/* Connects the NavBar and SideBar Components with the Map Component */}
                 <NavBar venues={this.state.venues} />
                 <SideBar
                     venues={this.state.venues}

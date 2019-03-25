@@ -1,6 +1,6 @@
 /*
     This is the Application File.
-    This will be the file that shows the content in the Map, Sidebar, and Nav Components.
+    This will be the file that shows the content in the Map, Sidebar, and NavBar Components.
 */
 
 // Imports
@@ -16,7 +16,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                {/* Displays the Map Component */}
+                {/* Displays the Map Component. Note: NavBar and SideBar Components are within the Map Component */}
                 <Map />
             </div>
         )
