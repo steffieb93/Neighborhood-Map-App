@@ -44,6 +44,7 @@ class Map extends Component {
         // If an error occurs
         .catch((error) => {
             console.log(error)
+            alert('Error Loading Page')
         })
     }
     fetchVenueDetails = (venueID) => {
@@ -194,6 +195,9 @@ function loadScript(url) {
     script.src = url
     script.async = true
     script.defer = true
+    script.onerror = function() {
+        alert("Error Loading Map")
+    }
 
     index.parentNode.insertBefore(script, index)
 }
